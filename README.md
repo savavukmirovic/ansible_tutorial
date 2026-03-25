@@ -1,2 +1,2 @@
 # ansible_tutorial
-Ansible tutorials with github version control
+Ansible tutorials with GitHub version control
