@@ -1,0 +1,14 @@
+---
+
+
+- name: Open HTTP in firewall
+  hosts: all
+  become: true
+  tasks:
+
+  - name: Allow HTTP service and set immediate configs
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+      immediate: true 
