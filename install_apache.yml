@@ -5,11 +5,10 @@
   tasks:
 
   - name: update repository index and install httpd package
-    dnf: 
+    package:
       name: httpd
       state: present
       update_cache: true
-    when: ansible_distribution == "Rocky"
 
   - name: start and enable httpd
     service:

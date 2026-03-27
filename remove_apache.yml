@@ -4,8 +4,8 @@
   become: true
   tasks:
 
-  - name: upadte repository index and remove httpd package
-    dnf: 
+  - name: update repository index and remove httpd package
+    package: 
       name: httpd
       state: absent 
       update_cache: true
