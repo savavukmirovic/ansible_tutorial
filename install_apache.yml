@@ -4,17 +4,16 @@
   become: true
   tasks:
 
-  - name: update repository index
-    dnf:
-      update_cache: true
-
-  - name: install httpd package
+  - name: update repository index and install httpd package
     dnf: 
       name: httpd
-      state: present 
+      state: present
+      update_cache: true
+    when: ansible_distribution == "Rocky"
 
   - name: start and enable httpd
     service:
       name: httpd
       state: started
       enabled: true
+    when: ansible_distribution == "Rocky"
