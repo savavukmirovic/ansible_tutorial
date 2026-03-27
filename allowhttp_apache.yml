@@ -8,7 +8,7 @@
 
   - name: Allow HTTP service and set immediate configs
     firewalld:
-      service: http
+      service: "{{ apache_package }}"
       permanent: true
       state: enabled
       immediate: true 

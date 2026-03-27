@@ -4,8 +4,10 @@
   become: true
   tasks:
 
-  - name: update repository index and remove httpd package
+  - name: update repository index and remove apache and php package
     package: 
-      name: httpd
+      name: 
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
       state: absent 
       update_cache: true

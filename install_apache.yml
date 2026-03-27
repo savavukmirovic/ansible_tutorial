@@ -4,15 +4,16 @@
   become: true
   tasks:
 
-  - name: update repository index and install httpd package
+  - name: update repository index and install apache and php package
     package:
-      name: httpd
-      state: present
+      name:
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
+      state: latest
       update_cache: true
 
-  - name: start and enable httpd
+  - name: start and enable apache service
     service:
-      name: httpd
+      name: "{{ apache_package }}"
       state: started
       enabled: true
-    when: ansible_distribution == "Rocky"
