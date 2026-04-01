@@ -1,36 +1,36 @@
-- name: install apache and php for Ubuntu servers                                                                                                                                                                                   
+- name: install apache and php for Ubuntu servers
   apt:                                                                                                                                                                                                                              
     name:                                                                                                                                                                                                                           
-      - apache2                                                                                                                                                                                                                     
-      - libapache2-mod-php                                                                                                                                                                                                          
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
     state: latest                                                                                                                                                                                                                   
-  when: ansible_distribution == "Ubuntu"                                                                                                                                                                                            
-                                                                                                                                                                                                                                      
-- name: install apache and php for Rocky servers                                                                                                                                                                                    
-  dnf:                                                                                                                                                                                                                              
-    name:                                                                                                                                                                                                                           
-      - httpd                                                                                                                                                                                                                       
-      - php                                                                                                                                                                                                                         
-    state: latest                                                                                                                                                                                                                   
-  when: ansible_distribution == "Rocky"                                                                                                                                                                                             
+  when: ansible_distribution == "Ubuntu"
+
+- name: install apache and php for Rocky servers
+  dnf:
+    name:
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
+    state: latest
+  when: ansible_distribution == "Rocky"
+
+- name: start and enable apache service
+  tags: apache,httpd
+  service:
+    name: "{{ apache_service }}"
+    state: started
+    enabled: true
                                                                                                                                                                                                                                       
 - name: change e-mail address for admin                                                                                                                                                                                             
   tags: apache,rocky,httpd                                                                                                                                                                                                          
   lineinfile:                                                                                                                                                                                                                       
-    path: /etc/httpd/conf/httpd.conf                                                                                                                                                                                                
+    path: /etc/httpd/conf/httpd.conf
     regex: "^ServerAdmin"                                                                                                                                                                                                           
-    line: ServerAdmin root@localhost                                                                                                                                                                                                
+    line: ServerAdmin root@localhost
   # line: ServerAdmin somebody@somewhere.net                                                                                                                                                                                        
   when: ansible_distribution == "Rocky"                                                                                                                                                                                             
-  register: httpd                                                                                                                                                                                                                   
+  notify: restart_apache
                                                                                                                                                                                                                                      
-- name: restart httpd (Rocky)                                                                                                                                                                                                       
-  tags: apache,rocky,httpd                                                                                                                                                                                                          
-  service:
-    name: httpd
-    state: restarted
-  when: httpd.changed
-
 - name: copy default html file for site
   tags: apache,apache2,httpd
   copy:
@@ -43,7 +43,7 @@
 - name: start httpd (Rocky)
   tags: apache,rocky,httpd
   service:
-    name: httpd
+    name: "{{ apache_service }}"
     state: started
     enabled: true
   when: ansible_distribution == "Rocky"
